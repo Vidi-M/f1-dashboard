@@ -35,6 +35,14 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           pip install awsebcli
-          eb init -p python-3.11 f1-dashboard --region $AWS_REGION  # Replace my-app-name with your EB app name
-          eb use f1-dashboard-env-vmistry
-          eb deploy
+          eb init f1-dashboard \
+            --platform python-3.11 \
+            --region $AWS_REGION
+          # Check if environment exists, create if it doesn't
+          if ! eb list | grep -q f1-dashboard-env-vmistry; then
+            eb create f1-dashboard-env-vmistry \
+              --platform python-3.11 \
+              --instance-type t2.micro \
+              
+          fi
+          eb deploy f1-dashboard-env-vmistry
