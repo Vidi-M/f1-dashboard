@@ -1,11 +1,51 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+    <title>F1 Dashboard</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
 <body>
+    <h1>F1 Dashboard</h1>
+    
+    {% if error %}
+        <p style="color: red;">Error: {{ error }}</p>
+    {% else %}
+        <h2>Race: {{ race_name }}</h2>
+        <h3>Top 10 Drivers by Fastest Lap Time</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Driver</th>
+                    <th>Fastest Lap Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for driver in driver_stats %}
+                <tr>
+                    <td>{{ driver.driver }}</td>
+                    <td>{{ driver.best_lap_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
-<h1>Welcome to the dashboard</h1>
-<p>I will be helping you visualise the race data from the F1 page</p>
-
-<a href="/" style="
+    <a href="/" style="
         display: inline-block;
         padding: 10px 20px;
         background-color: #572D69;
@@ -14,6 +54,5 @@
         border-radius: 5px;
         cursor: pointer;
     ">HOME</a>
-
 </body>
 </html>
