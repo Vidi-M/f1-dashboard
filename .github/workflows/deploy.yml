@@ -1,9 +1,14 @@
+
 name: Deploy to AWS Elastic Beanstalk
 
 on:
   push:
     branches:
       - main  # Trigger deployment only when pushing to the main branch
+
+env:
+  ELASTIC_BEANSTALK_NAME: f1-dashboard
+  ELASTIC_BEANSTALK_ENV_NAME: F1-dashboard-env
 
 jobs:
   deploy:
@@ -35,4 +40,4 @@ jobs:
         run: |
           pip install awsebcli
           eb init -p python-3.11 f1-dashboard --region $AWS_REGION  # Replace my-app-name with your EB app name
-          eb deploy F1-dashboard-env
+          eb deploy
