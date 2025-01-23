@@ -34,5 +34,5 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           pip install awsebcli
-          eb init -p python-3.x f1-dashboard --region $AWS_REGION  # Replace my-app-name with your EB app name
+          eb init -p python-3.11 f1-dashboard --region $AWS_REGION  # Replace my-app-name with your EB app name
           eb deploy
