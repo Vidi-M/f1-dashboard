@@ -26,38 +26,6 @@
                     {% endfor %}
                 </div>
             </div>
-
-            {% comment %} <!-- Fastest Laps Card -->
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Fastest Laps</h2>
-                <div class="space-y-2">
-                    {% for lap in fastest_laps %}
-                        <div class="flex justify-between border-b pb-2">
-                            <span>{{ lap.driver }}</span>
-                            <span class="font-bold">{{ lap.lap_time }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Tire Strategy Card -->
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Tire Strategies</h2>
-                <div class="space-y-2">
-                    {% for strategy in tire_strategies %}
-                        <div class="border-b pb-2">
-                            <span class="font-semibold">{{ strategy.driver }}</span>
-                            <div class="flex space-x-2 mt-1">
-                                {% for compound, count in strategy.compounds.items %}
-                                    <span class="bg-gray-200 px-2 py-1 rounded text-sm">
-                                        {{ compound }}: {{ count }}
-                                    </span>
-                                {% endfor %} {% endcomment %}
-                            {% comment %} </div>
-                        </div>
-                    {% endfor %}
-                </div> {% endcomment %}
-            </div>
         </div>
     </div>
 </body>

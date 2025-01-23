@@ -1,4 +1,8 @@
 import fastf1
+import fastf1.plotting
+import matplotlib.pyplot as plt
+import io
+import base64
 from django.shortcuts import render
 
 def dashboard(request):
@@ -23,31 +27,9 @@ def dashboard(request):
             } for _, row in driver_standings.iterrows()
         ]
         
-        # Fastest Laps Card
-        fastest_lap = session.laps.pick_fastest()
-        # fastest_laps_list = [
-        #     {
-        #         'driver': lap['Driver'],
-        #         'team': lap['Team'],
-        #         'lap_time': str(lap['LapTime']),
-        #         'speed': lap['Speed']
-        #     } for lap in fastest_laps.iterlaps()
-        # ]
-        
-        # # Tire Strategy Card
-        # tire_strategies = session.laps.groupby('Driver')['Compound'].value_counts()
-        # tire_strategy_list = [
-        #     {
-        #         'driver': driver,
-        #         'compounds': dict(tire_strategies[driver])
-        #     } for driver in tire_strategies.groupby().index
-        # ]
-        
         context = {
              'driver_standings': driver_standings_list,
-        #     'fastest_laps': fastest_laps_list,
-        #     'tire_strategies': tire_strategy_list,
-             'race_name': f"{session.event.year} {session.event.name}"
+             'race_name': f"{session.event['EventName']} {session.event.year}"
         }
         
         return render(request, 'dashboard.html', context)
