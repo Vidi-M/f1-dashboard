@@ -1,42 +1,59 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.template import loader
 import fastf1
-import pandas as pd
+from django.shortcuts import render
 
 def dashboard(request):
+    fastf1.Cache.enable_cache('cache/')
+    
     try:
-        # Load session details
-        session = fastf1.get_session(2024, 'Baku', 'Race')
+        # Fetch the most recent race weekend
+        session = fastf1.get_session(2023, 'Abu Dhabi', 'Race')
         session.load()
         
-        # Get lap data
-        lap_data = session.laps
-        
-        # Convert to a format easy to pass to template
-        top_drivers = lap_data.groupby('Driver')[['LapTime']].min().sort_values('LapTime').head(10)
-        
-        # Convert Dataframe to a list of dictionaries for easier rendering
-        driver_stats = [
+        # Driver Standings Card
+        driver_standings = session.results.iloc[:]
+        driver_standings_list = [
             {
-                'driver': index, 
-                'best_lap_time': str(row['LapTime'])
-            } for index, row in top_drivers.iterrows()
+                'position': int(row['Position']),
+                'grid': row['GridPosition'],
+                'gain': int(row['Position'] - row['GridPosition']),
+                'driver': row['Abbreviation'],
+                'team': row['TeamName'],
+                'interval': row['Time'],
+                'points': int(row['Points'])
+            } for _, row in driver_standings.iterrows()
         ]
         
+        # Fastest Laps Card
+        fastest_lap = session.laps.pick_fastest()
+        # fastest_laps_list = [
+        #     {
+        #         'driver': lap['Driver'],
+        #         'team': lap['Team'],
+        #         'lap_time': str(lap['LapTime']),
+        #         'speed': lap['Speed']
+        #     } for lap in fastest_laps.iterlaps()
+        # ]
+        
+        # # Tire Strategy Card
+        # tire_strategies = session.laps.groupby('Driver')['Compound'].value_counts()
+        # tire_strategy_list = [
+        #     {
+        #         'driver': driver,
+        #         'compounds': dict(tire_strategies[driver])
+        #     } for driver in tire_strategies.groupby().index
+        # ]
+        
         context = {
-            'driver_stats': driver_stats,
-            'race_name': f"{session.event.year} {session.event.name}"
+             'driver_standings': driver_standings_list,
+        #     'fastest_laps': fastest_laps_list,
+        #     'tire_strategies': tire_strategy_list,
+             'race_name': f"{session.event.year} {session.event.name}"
         }
         
         return render(request, 'dashboard.html', context)
     
     except Exception as e:
-        # Handle any errors
         context = {
             'error': str(e)
         }
         return render(request, 'dashboard.html', context)
-    
-    # template = loader.get_template('dashboard.html')
-    # return HttpResponse(template.render())

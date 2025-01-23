@@ -1,58 +1,71 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>F1 Dashboard</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>F1 Dashboard</h1>
-    
-    {% if error %}
-        <p style="color: red;">Error: {{ error }}</p>
-    {% else %}
-        <h2>Race: {{ race_name }}</h2>
-        <h3>Top 10 Drivers by Fastest Lap Time</h3>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8 text-red-600">F1 Dashboard - {{ race_name }}</h1>
         
-        <table>
-            <thead>
-                <tr>
-                    <th>Driver</th>
-                    <th>Fastest Lap Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for driver in driver_stats %}
-                <tr>
-                    <td>{{ driver.driver }}</td>
-                    <td>{{ driver.best_lap_time }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <!-- Driver Standings Card -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Driver Standings</h2>
+                <div class="space-y-2">
+                    {% for driver in driver_standings %}
+                        <div class="flex justify-between border-b pb-2">
+                            <span>{{ driver.position }}</span>
+                            <span> {{ driver.gain}}</span>
+                            <span> {{ driver.driver }}</span>
+                            {% comment %} <span> {{ driver.interval }}</span> {% endcomment %}
+                            <span class="font-bold"> + {{ driver.points }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
 
-    <a href="/" style="
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #572D69;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        cursor: pointer;
-    ">HOME</a>
+            {% comment %} <!-- Fastest Laps Card -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Fastest Laps</h2>
+                <div class="space-y-2">
+                    {% for lap in fastest_laps %}
+                        <div class="flex justify-between border-b pb-2">
+                            <span>{{ lap.driver }}</span>
+                            <span class="font-bold">{{ lap.lap_time }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Tire Strategy Card -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Tire Strategies</h2>
+                <div class="space-y-2">
+                    {% for strategy in tire_strategies %}
+                        <div class="border-b pb-2">
+                            <span class="font-semibold">{{ strategy.driver }}</span>
+                            <div class="flex space-x-2 mt-1">
+                                {% for compound, count in strategy.compounds.items %}
+                                    <span class="bg-gray-200 px-2 py-1 rounded text-sm">
+                                        {{ compound }}: {{ count }}
+                                    </span>
+                                {% endfor %} {% endcomment %}
+                            {% comment %} </div>
+                        </div>
+                    {% endfor %}
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+
+{% if error %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Error: </strong>
+        <span class="block sm:inline">{{ error }}</span>
+    </div>
+{% endif %}
