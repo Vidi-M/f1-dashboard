@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'  # Match your Django project's Python version
+          python-version: '3.11'  # Match your Django project's Python version
 
       - name: Install dependencies
         run: |
